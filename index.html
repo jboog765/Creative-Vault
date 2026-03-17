@@ -630,7 +630,7 @@
 <script type="module">
 import { initializeApp }                              from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-         signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged }
+         signInWithRedirect, getRedirectResult, GoogleAuthProvider, signOut, onAuthStateChanged }
                                                       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot }
                                                       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
@@ -755,7 +755,7 @@ window.handleAuth = async function() {
 };
 
 window.handleGoogle = async function() {
-  try { await signInWithPopup(auth, gProvider); }
+  try { await signInWithRedirect(auth, gProvider); }
   catch(e) { document.getElementById('auth-error').textContent = friendlyError(e.code); }
 };
 
@@ -775,6 +775,11 @@ function friendlyError(code) {
   };
   return map[code] || 'Something went wrong. Try again.';
 }
+
+// ── HANDLE GOOGLE REDIRECT RESULT ON PAGE LOAD ────────────────────────
+getRedirectResult(auth).catch(e => {
+  console.warn('Redirect result error:', e.code);
+});
 
 // ── AUTH STATE ───────────────────────────────────────────────────────
 onAuthStateChanged(auth, async (user) => {
