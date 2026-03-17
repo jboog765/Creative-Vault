@@ -3,79 +3,74 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>APG VAULT</title>
+<title>CREATD</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap');
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg: #111111;
-    --bg-card: #181818;
-    --white: #ffffff;
-    --blue: #5bc8f5;
-    --blue-dim: rgba(91,200,245,0.13);
-    --blue-hover: rgba(91,200,245,0.07);
-    --dim: rgba(255,255,255,0.07);
-    --dim2: rgba(255,255,255,0.12);
-    --red: #f55;
-    --gap: 2.1rem;
+    --bg: #111; --bg-card: #181818; --white: #fff;
+    --blue: #5bc8f5; --blue-dim: rgba(91,200,245,0.13); --blue-hover: rgba(91,200,245,0.07);
+    --dim: rgba(255,255,255,0.07); --dim2: rgba(255,255,255,0.12); --red: #f55; --gap: 2.1rem;
   }
-
   html, body { background: var(--bg); color: var(--white); font-family: 'DM Sans', sans-serif; height: 100%; overflow: hidden; user-select: none; }
-
   .screen { position: fixed; inset: 0; display: flex; flex-direction: column; transition: opacity 0.28s ease, transform 0.28s ease; }
   .screen.hidden { opacity: 0; pointer-events: none; transform: translateX(22px); }
 
+  /* ── SPLASH ── */
+  #splash-screen { align-items: center; justify-content: center; background: var(--bg); z-index: 999; }
+  .splash-logo { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; letter-spacing: 0.25em; color: var(--white); animation: splashPulse 1.4s ease both; }
+  .splash-logo span { color: var(--blue); }
+  .splash-sub { font-size: 0.6rem; letter-spacing: 0.35em; text-transform: uppercase; color: rgba(255,255,255,0.2); margin-top: 0.5rem; animation: splashPulse 1.4s ease 0.2s both; }
+  @keyframes splashPulse {
+    0%   { opacity: 0; transform: scale(0.9); filter: blur(8px); }
+    50%  { opacity: 1; filter: blur(0); }
+    80%  { transform: scale(1.03); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
   /* ── LOADING ── */
   #loading-screen { align-items: center; justify-content: center; }
-  .spinner { width: 32px; height: 32px; border: 2px solid var(--dim2); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.7s linear infinite; }
+  .spinner { width: 28px; height: 28px; border: 2px solid var(--dim2); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
   /* ── AUTH ── */
   #auth-screen { align-items: center; justify-content: center; }
   .auth-box { width: min(90vw, 360px); display: flex; flex-direction: column; gap: 1rem; animation: riseIn 0.6s cubic-bezier(0.22,1,0.36,1) both; }
-  .auth-logo { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 0.2em; color: var(--white); text-align: center; margin-bottom: 0.5rem; line-height: 1; }
+  .auth-logo { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; letter-spacing: 0.2em; color: var(--white); text-align: center; margin-bottom: 0.4rem; line-height: 1; }
   .auth-logo span { color: var(--blue); }
-  .auth-sub { text-align: center; font-size: 0.62rem; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(255,255,255,0.2); margin-bottom: 1rem; }
+  .auth-sub { text-align: center; font-size: 0.6rem; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(255,255,255,0.2); margin-bottom: 0.8rem; }
   .auth-tabs { display: flex; border-bottom: 1px solid var(--dim2); margin-bottom: 0.25rem; }
-  .auth-tab { flex: 1; text-align: center; padding: 0.6rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; color: rgba(255,255,255,0.3); border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; margin-bottom: -1px; }
+  .auth-tab { flex: 1; text-align: center; padding: 0.6rem; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; color: rgba(255,255,255,0.3); border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; margin-bottom: -1px; }
   .auth-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
   .auth-input { width: 100%; background: var(--bg-card); border: 1px solid var(--dim2); border-radius: 9px; padding: 0.75rem 1rem; color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; transition: border-color 0.2s; user-select: text; }
   .auth-input:focus { border-color: var(--blue); }
   .auth-input::placeholder { color: rgba(255,255,255,0.18); }
   .auth-btn { width: 100%; padding: 0.82rem; background: var(--blue); color: #000; border: none; border-radius: 9px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s; margin-top: 0.2rem; }
-  .auth-btn:hover { opacity: 0.82; }
-  .auth-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-  .auth-error { font-size: 0.74rem; color: var(--red); text-align: center; min-height: 1rem; letter-spacing: 0.04em; }
-  .auth-divider { display: flex; align-items: center; gap: 0.75rem; color: rgba(255,255,255,0.15); font-size: 0.65rem; letter-spacing: 0.1em; }
+  .auth-btn:hover { opacity: 0.82; } .auth-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .auth-error { font-size: 0.74rem; color: var(--red); text-align: center; min-height: 1rem; }
+  .auth-divider { display: flex; align-items: center; gap: 0.75rem; color: rgba(255,255,255,0.15); font-size: 0.65rem; }
   .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--dim2); }
-  .auth-google { width: 100%; padding: 0.75rem; background: #1e1e1e; color: rgba(255,255,255,0.75); border: 1px solid var(--dim2); border-radius: 9px; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; cursor: pointer; transition: border-color 0.2s, background 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
+  .auth-google { width: 100%; padding: 0.75rem; background: #1e1e1e; color: rgba(255,255,255,0.75); border: 1px solid var(--dim2); border-radius: 9px; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: border-color 0.2s, background 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.6rem; }
   .auth-google:hover { border-color: var(--blue); background: var(--blue-hover); }
 
   /* ── HOME ── */
   #home { align-items: center; justify-content: center; gap: var(--gap); }
-  .user-bar { position: fixed; top: 1rem; right: 1.2rem; display: flex; align-items: center; gap: 0.6rem; z-index: 10; animation: fadeIn 0.5s ease 0.8s both; }
-  .user-email { font-size: 0.6rem; color: rgba(255,255,255,0.18); letter-spacing: 0.08em; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .user-bar { position: fixed; top: 1rem; right: 1.2rem; z-index: 10; animation: fadeIn 0.5s ease 0.8s both; }
   .logout-btn { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.2); cursor: pointer; transition: color 0.2s; padding: 0.3rem 0.5rem; border: 1px solid var(--dim); border-radius: 5px; }
   .logout-btn:hover { color: var(--red); border-color: var(--red); }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
   .nav-row { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; cursor: pointer; animation: riseIn 0.7s cubic-bezier(0.22,1,0.36,1) both; }
-  .nav-row:nth-child(2) { animation-delay: 0.05s; }
-  .nav-row:nth-child(3) { animation-delay: 0.15s; }
-  .nav-row:nth-child(4) { animation-delay: 0.25s; }
-  .nav-row:nth-child(5) { animation-delay: 0.35s; }
-  .nav-row:nth-child(6) { animation-delay: 0.45s; }
-
-  .nav-item { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 5vw, 3.6rem); letter-spacing: 0.12em; color: var(--white); position: relative; line-height: 1; transition: color 0.2s, letter-spacing 0.2s; }
+  .nav-row:nth-child(2){animation-delay:0.05s;} .nav-row:nth-child(3){animation-delay:0.15s;}
+  .nav-row:nth-child(4){animation-delay:0.25s;} .nav-row:nth-child(5){animation-delay:0.35s;}
+  .nav-row:nth-child(6){animation-delay:0.45s;}
+  .nav-item { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem,5vw,3.6rem); letter-spacing: 0.12em; color: var(--white); position: relative; line-height: 1; transition: color 0.2s, letter-spacing 0.2s; }
   .nav-item::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 2px; background: var(--blue); transition: width 0.25s ease; }
   .nav-row:hover .nav-item { color: var(--blue); letter-spacing: 0.18em; }
   .nav-row:hover .nav-item::after { width: 100%; }
   .nav-badge { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: transparent; height: 0.85rem; transition: color 0.2s; }
   .nav-badge.has { color: rgba(91,200,245,0.65); }
   .nav-row:hover .nav-badge.has { color: var(--blue); }
-
   .portfolio-link { position: fixed; bottom: 2.2rem; left: 50%; transform: translateX(-50%); font-size: 0.58rem; font-weight: 700; letter-spacing: 0.38em; text-transform: uppercase; color: rgba(255,255,255,0.2); cursor: pointer; transition: color 0.2s; display: flex; flex-direction: column; align-items: center; gap: 0.2rem; animation: riseInPort 0.65s cubic-bezier(0.22,1,0.36,1) 0.55s both; }
   .portfolio-link:hover { color: var(--blue); }
   .port-badge { font-size: 0.52rem; letter-spacing: 0.12em; color: transparent; transition: color 0.2s; }
@@ -99,25 +94,49 @@
   .back-btn:hover { opacity: 0.6; }
   .back-btn svg { width: 17px; height: 17px; }
   .topbar-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.45rem; letter-spacing: 0.18em; color: var(--white); position: absolute; left: 50%; transform: translateX(-50%); }
-  .add-btn { cursor: pointer; color: var(--blue); z-index: 2; display: flex; align-items: center; transition: opacity 0.2s, transform 0.25s; }
+  .topbar-right { display: flex; align-items: center; gap: 0.75rem; z-index: 2; }
+  .add-btn { cursor: pointer; color: var(--blue); display: flex; align-items: center; transition: opacity 0.2s, transform 0.25s; }
   .add-btn:hover { opacity: 0.6; transform: rotate(90deg); }
   .add-btn svg { width: 23px; height: 23px; }
+  .view-toggle { cursor: pointer; color: rgba(255,255,255,0.3); display: flex; align-items: center; transition: color 0.2s; }
+  .view-toggle:hover { color: var(--blue); }
+  .view-toggle svg { width: 18px; height: 18px; }
 
-  /* ── SEARCH ── */
+  /* ── SEARCH + SORT ── */
   .search-wrap { padding: 0.75rem 1.5rem; border-bottom: 1px solid var(--dim); flex-shrink: 0; }
   .search-input { width: 100%; background: var(--bg-card); border: 1px solid var(--dim2); border-radius: 8px; padding: 0.5rem 0.9rem 0.5rem 2.3rem; color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.8rem; outline: none; transition: border-color 0.2s; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' fill='none' stroke='rgba(255,255,255,0.22)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: 0.75rem center; }
   .search-input:focus { border-color: var(--blue); }
   .search-input::placeholder { color: rgba(255,255,255,0.16); }
+  .sort-bar { display: flex; gap: 0.4rem; padding: 0.5rem 1.5rem 0; flex-shrink: 0; flex-wrap: wrap; }
+  .sort-btn { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.28); cursor: pointer; padding: 0.25rem 0.6rem; border-radius: 5px; border: 1px solid transparent; transition: all 0.15s; white-space: nowrap; }
+  .sort-btn.active { color: var(--blue); border-color: rgba(91,200,245,0.3); background: var(--blue-dim); }
+  .sort-btn:hover { color: var(--blue); }
 
   /* ── CONTENT ── */
   .content-area { flex: 1; overflow-y: auto; padding: 1.3rem; }
   .content-area::-webkit-scrollbar { width: 3px; }
   .content-area::-webkit-scrollbar-thumb { background: var(--dim2); border-radius: 2px; }
-  .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.85rem; align-content: start; }
 
-  .vault-item { background: var(--bg-card); border: 1px solid var(--dim); border-radius: 10px; padding: 0.9rem; cursor: pointer; transition: border-color 0.2s, background 0.2s; display: flex; flex-direction: column; gap: 0.45rem; position: relative; animation: itemIn 0.26s ease both; }
+  /* Grid view */
+  .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.85rem; align-content: start; }
+  /* List view */
+  .items-grid.list-view { grid-template-columns: 1fr; gap: 0.5rem; }
+  .items-grid.list-view .vault-item { flex-direction: row; align-items: center; padding: 0.7rem 1rem; gap: 0.75rem; }
+  .items-grid.list-view .vault-item .item-icon { font-size: 1.2rem; flex-shrink: 0; }
+  .items-grid.list-view .vault-item .item-name { flex: 1; padding-right: 0; font-size: 0.84rem; }
+  .items-grid.list-view .vault-item .note-preview { display: none; }
+  .items-grid.list-view .vault-item .item-meta { flex-shrink: 0; }
+  .items-grid.list-view .vault-item .item-ts { flex-shrink: 0; }
+  .items-grid.list-view .vault-item img { width: 48px; height: 36px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+  .items-grid.list-view .vault-item audio { display: none; }
+  .items-grid.list-view .vault-item .tag-dots { flex-shrink: 0; }
+  .items-grid.list-view .vault-item .tag-picker { bottom: auto; top: 2.2rem; }
+
+  .vault-item { background: var(--bg-card); border: 1px solid var(--dim); border-radius: 10px; padding: 0.9rem; cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.2s; display: flex; flex-direction: column; gap: 0.45rem; position: relative; animation: itemIn 0.26s ease both; overflow: hidden; }
   .vault-item:hover { border-color: var(--blue); background: var(--blue-hover); }
   .vault-item.pressing { border-color: rgba(91,200,245,0.5); background: var(--blue-dim); }
+  .vault-item.swiping-left { transform: translateX(-60px); }
+  .vault-item.archived { opacity: 0.45; }
   @keyframes itemIn { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
 
   .item-icon { font-size: 1.7rem; line-height: 1; }
@@ -125,12 +144,46 @@
   .item-meta { font-size: 0.62rem; color: rgba(255,255,255,0.26); text-transform: uppercase; letter-spacing: 0.08em; }
   .item-ts { font-size: 0.6rem; color: rgba(255,255,255,0.18); }
   .note-preview { font-size: 0.7rem; color: rgba(255,255,255,0.35); line-height: 1.5; max-height: 3em; overflow: hidden; }
-  .item-del { position: absolute; top: 0.45rem; right: 0.5rem; font-size: 0.75rem; color: rgba(255,255,255,0.1); cursor: pointer; line-height: 1; padding: 2px; transition: color 0.15s; }
+  .item-del { position: absolute; top: 0.45rem; right: 0.5rem; font-size: 0.75rem; color: rgba(255,255,255,0.1); cursor: pointer; line-height: 1; padding: 2px; transition: color 0.15s; z-index: 3; }
   .item-del:hover { color: var(--red); }
+  .pin-indicator { position: absolute; top: 0.42rem; left: 0.5rem; font-size: 0.65rem; cursor: pointer; opacity: 0.15; transition: opacity 0.15s; z-index: 3; }
+  .pin-indicator.pinned { opacity: 0.85; }
+  .pin-indicator:hover { opacity: 1; }
 
+  /* Color tags */
+  .tag-dots { display: flex; gap: 0.3rem; margin-top: 0.1rem; }
+  .tag-dot { width: 8px; height: 8px; border-radius: 50%; cursor: pointer; transition: transform 0.15s; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.1); }
+  .tag-dot:hover { transform: scale(1.3); }
+  .tag-dot.wip     { background: #f5a623; }
+  .tag-dot.done    { background: #4cd964; }
+  .tag-dot.shelved { background: #8e8e93; }
+  .tag-dot.fire    { background: #f55; }
+  .tag-dot.active-tag { box-shadow: 0 0 0 2px #fff; border-color: transparent; }
+  .tag-dot.empty-tag { background: rgba(255,255,255,0.06); }
+  .tag-picker { position: absolute; bottom: 0.5rem; left: 0.5rem; display: none; flex-direction: row; gap: 0.35rem; background: #1e1e1e; border: 1px solid var(--dim2); border-radius: 8px; padding: 0.4rem 0.5rem; z-index: 20; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+  .tag-picker.open { display: flex; }
+  .tp-dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; transition: transform 0.15s; }
+  .tp-dot:hover { transform: scale(1.25); }
+  .tp-clear { font-size: 0.65rem; color: rgba(255,255,255,0.4); cursor: pointer; display: flex; align-items: center; padding: 0 2px; }
+  .tp-clear:hover { color: var(--red); }
+
+  /* Context menu (long press) */
+  .ctx-menu { position: fixed; background: #1a1a1a; border: 1px solid rgba(91,200,245,0.2); border-radius: 10px; overflow: hidden; z-index: 200; min-width: 170px; box-shadow: 0 8px 30px rgba(0,0,0,0.7); display: none; animation: dropIn 0.15s ease both; }
+  .ctx-menu.open { display: block; }
+  .ctx-item { display: flex; align-items: center; gap: 0.65rem; padding: 0.78rem 1rem; font-size: 0.78rem; font-weight: 500; cursor: pointer; transition: background 0.14s, color 0.14s; color: rgba(255,255,255,0.72); border-bottom: 1px solid var(--dim); }
+  .ctx-item:last-child { border-bottom: none; }
+  .ctx-item:hover { background: var(--blue-dim); color: var(--blue); }
+  .ctx-item.danger:hover { background: rgba(255,85,85,0.1); color: var(--red); }
+
+  /* Empty state */
   .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.65rem; color: rgba(255,255,255,0.1); padding-top: 5rem; }
   .empty-state svg { width: 42px; height: 42px; }
   .empty-state p { font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; }
+
+  /* Archive banner */
+  .archive-btn-row { display: flex; justify-content: center; padding: 0.5rem 1.5rem 0; flex-shrink: 0; }
+  .archive-toggle { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.2); cursor: pointer; transition: color 0.2s; }
+  .archive-toggle:hover { color: var(--blue); }
 
   /* ── NOTE ── */
   .note-body { flex: 1; padding: 1.3rem 1.5rem; overflow-y: auto; display: flex; flex-direction: column; }
@@ -139,7 +192,7 @@
   /* ── DROPDOWN ── */
   .dropdown-overlay { position: fixed; inset: 0; z-index: 50; display: none; }
   .dropdown-overlay.open { display: block; }
-  .dropdown-menu { position: fixed; top: 3.8rem; right: 1.5rem; background: #1a1a1a; border: 1px solid rgba(91,200,245,0.2); border-radius: 10px; overflow: hidden; z-index: 51; min-width: 152px; box-shadow: 0 10px 40px rgba(0,0,0,0.7); display: none; }
+  .dropdown-menu { position: fixed; top: 3.8rem; right: 1.5rem; background: #1a1a1a; border: 1px solid rgba(91,200,245,0.2); border-radius: 10px; overflow: hidden; z-index: 51; min-width: 155px; box-shadow: 0 10px 40px rgba(0,0,0,0.7); display: none; }
   .dropdown-menu.open { display: block; animation: dropIn 0.15s ease both; }
   @keyframes dropIn { from { opacity: 0; transform: translateY(-6px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
   .dropdown-item { display: flex; align-items: center; gap: 0.65rem; padding: 0.82rem 1rem; font-size: 0.78rem; font-weight: 500; cursor: pointer; transition: background 0.14s, color 0.14s; color: rgba(255,255,255,0.72); border-bottom: 1px solid var(--dim); }
@@ -152,7 +205,7 @@
   .modal { background: #161616; border: 1px solid rgba(91,200,245,0.16); border-radius: 14px; padding: 1.5rem; width: min(90vw, 390px); display: flex; flex-direction: column; gap: 0.85rem; animation: modalIn 0.18s ease both; }
   @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(7px); } to { opacity: 1; transform: scale(1) translateY(0); } }
   .modal h3 { font-family: 'Bebas Neue', sans-serif; font-size: 1.25rem; letter-spacing: 0.14em; color: var(--blue); }
-  .modal input { background: #0d0d0d; border: 1px solid var(--dim2); border-radius: 8px; padding: 0.65rem 0.85rem; color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.84rem; outline: none; transition: border-color 0.2s; user-select: text; }
+  .modal input { background: #0d0d0d; border: 1px solid var(--dim2); border-radius: 8px; padding: 0.65rem 0.85rem; color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 0.84rem; outline: none; transition: border-color 0.2s; user-select: text; width: 100%; }
   .modal input:focus { border-color: var(--blue); }
   .modal input::placeholder { color: rgba(255,255,255,0.16); }
   .modal-btns { display: flex; gap: 0.6rem; justify-content: flex-end; }
@@ -164,30 +217,45 @@
   .file-drop-zone:hover { border-color: var(--blue); background: var(--blue-hover); color: var(--blue); }
   .file-drop-zone input { display: none; }
 
-  /* ── IMAGE VIEWER ── */
-  .img-viewer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.93); z-index: 200; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; }
-  .img-viewer-overlay.open { display: flex; }
-  .img-viewer-overlay img { max-width: 90vw; max-height: 80vh; border-radius: 8px; }
-  .img-close { color: var(--blue); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; padding: 0.45rem 1rem; border: 1px solid rgba(91,200,245,0.22); border-radius: 6px; transition: background 0.15s; }
-  .img-close:hover { background: var(--blue-dim); }
+  /* Move modal section list */
+  .move-section-list { display: flex; flex-direction: column; gap: 0.4rem; }
+  .move-section-item { padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid var(--dim2); font-size: 0.82rem; font-weight: 600; letter-spacing: 0.1em; cursor: pointer; transition: background 0.15s, border-color 0.15s; color: rgba(255,255,255,0.6); }
+  .move-section-item:hover { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+  .move-section-item.current { opacity: 0.3; pointer-events: none; }
 
-  .hint { position: fixed; bottom: 1.2rem; left: 50%; transform: translateX(-50%); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.1); pointer-events: none; }
+  /* ── IMAGE/VIDEO VIEWER ── */
+  .media-viewer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.93); z-index: 300; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; }
+  .media-viewer-overlay.open { display: flex; }
+  .media-viewer-overlay img, .media-viewer-overlay video { max-width: 90vw; max-height: 80vh; border-radius: 8px; }
+  .media-close { color: var(--blue); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; padding: 0.45rem 1rem; border: 1px solid rgba(91,200,245,0.22); border-radius: 6px; transition: background 0.15s; }
+  .media-close:hover { background: var(--blue-dim); }
 
+  /* ── ARCHIVE SCREEN ── */
+  #archive-screen { flex-direction: column; }
+
+  .hint { position: fixed; bottom: 1.2rem; left: 50%; transform: translateX(-50%); font-size: 0.58rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.08); pointer-events: none; }
   .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #1e1e1e; border: 1px solid var(--dim2); color: rgba(255,255,255,0.7); font-size: 0.74rem; letter-spacing: 0.06em; padding: 0.6rem 1.2rem; border-radius: 8px; z-index: 999; animation: toastIn 0.2s ease both; pointer-events: none; }
   @keyframes toastIn { from { opacity:0; transform: translateX(-50%) translateY(8px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+
+  /* video card */
+  .video-thumb { width: 100%; border-radius: 5px; object-fit: cover; aspect-ratio: 16/9; background: #000; }
 </style>
 </head>
 <body>
 
-<!-- LOADING -->
-<div id="loading-screen" class="screen">
-  <div class="spinner"></div>
+<!-- SPLASH -->
+<div id="splash-screen" class="screen">
+  <div class="splash-logo">CREAT<span>D</span></div>
+  <div class="splash-sub">your creative archive</div>
 </div>
+
+<!-- LOADING -->
+<div id="loading-screen" class="screen hidden"><div class="spinner"></div></div>
 
 <!-- AUTH -->
 <div id="auth-screen" class="screen hidden">
   <div class="auth-box">
-    <div class="auth-logo">APG<span>.</span>VAULT</div>
+    <div class="auth-logo">CREAT<span>D</span></div>
     <div class="auth-sub">your creative archive</div>
     <div class="auth-tabs">
       <div class="auth-tab active" id="tab-login" onclick="switchTab('login')">Sign In</div>
@@ -195,7 +263,6 @@
     </div>
     <input class="auth-input" id="auth-email" type="email" placeholder="Email address" autocomplete="email"/>
     <input class="auth-input" id="auth-pass" type="password" placeholder="Password" autocomplete="current-password"/>
-    <input class="auth-input hidden" id="auth-pass2" type="password" placeholder="Confirm password"/>
     <div class="auth-error" id="auth-error"></div>
     <button class="auth-btn" id="auth-submit-btn" onclick="handleAuth()">Sign In</button>
     <div class="auth-divider">or</div>
@@ -208,10 +275,7 @@
 
 <!-- HOME -->
 <div id="home" class="screen hidden">
-  <div class="user-bar">
-    <div class="user-email" id="user-email-display"></div>
-    <div class="logout-btn" onclick="handleLogout()">Sign out</div>
-  </div>
+  <div class="user-bar"><div class="logout-btn" onclick="handleLogout()">Sign out</div></div>
   <div class="nav-row" onclick="openSection('MUSIC')"><div class="nav-item">MUSIC</div><div class="nav-badge" id="badge-MUSIC"></div></div>
   <div class="nav-row" onclick="openSection('GRAPHICS')"><div class="nav-item">GRAPHICS</div><div class="nav-badge" id="badge-GRAPHICS"></div></div>
   <div class="nav-row" onclick="openSection('FASHION')"><div class="nav-item">FASHION</div><div class="nav-badge" id="badge-FASHION"></div></div>
@@ -225,14 +289,30 @@
   <div class="topbar">
     <div class="back-btn" onclick="goHome()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>HOME</div>
     <div class="topbar-title" id="section-title-text"></div>
-    <div class="add-btn" onclick="openDropdown(false)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+    <div class="topbar-right">
+      <div class="view-toggle" onclick="toggleView('section')" id="section-view-btn" title="Toggle view">
+        <svg id="section-view-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      </div>
+      <div class="add-btn" onclick="openDropdown(false)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+    </div>
   </div>
   <div class="search-wrap"><input class="search-input" id="section-search" type="text" placeholder="Search this vault..." oninput="renderItems()"/></div>
+  <div class="sort-bar" id="section-sort-bar">
+    <div class="sort-btn active" onclick="setSort('section','newest',this)">Newest</div>
+    <div class="sort-btn" onclick="setSort('section','oldest',this)">Oldest</div>
+    <div class="sort-btn" onclick="setSort('section','az',this)">A–Z</div>
+    <div class="sort-btn" onclick="setSort('section','pinned',this)">Pinned</div>
+    <div class="sort-btn" id="section-filter-wip"    onclick="setTagFilter('section','wip',this)">🟠 WIP</div>
+    <div class="sort-btn" id="section-filter-done"   onclick="setTagFilter('section','done',this)">🟢 Done</div>
+    <div class="sort-btn" id="section-filter-shelved" onclick="setTagFilter('section','shelved',this)">⚫ Shelved</div>
+    <div class="sort-btn" id="section-filter-fire"   onclick="setTagFilter('section','fire',this)">🔴 Fire</div>
+  </div>
+  <div class="archive-btn-row"><div class="archive-toggle" id="section-archive-toggle" onclick="toggleArchiveView('section')">Show Archive</div></div>
   <div class="content-area">
     <div class="items-grid" id="items-grid"></div>
     <div class="empty-state" id="empty-state" style="display:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg><p>Nothing here — hit + to add</p></div>
   </div>
-  <div class="hint">Hold any item to rename</div>
+  <div class="hint">Hold any item for options</div>
 </div>
 
 <!-- FOLDER -->
@@ -240,14 +320,30 @@
   <div class="topbar">
     <div class="back-btn" onclick="closeFolder()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>BACK</div>
     <div class="topbar-title" id="folder-title-text"></div>
-    <div class="add-btn" onclick="openDropdown(true)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+    <div class="topbar-right">
+      <div class="view-toggle" onclick="toggleView('folder')" id="folder-view-btn" title="Toggle view">
+        <svg id="folder-view-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      </div>
+      <div class="add-btn" onclick="openDropdown(true)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+    </div>
   </div>
   <div class="search-wrap"><input class="search-input" id="folder-search" type="text" placeholder="Search this folder..." oninput="renderFolderItems()"/></div>
+  <div class="sort-bar" id="folder-sort-bar">
+    <div class="sort-btn active" onclick="setSort('folder','newest',this)">Newest</div>
+    <div class="sort-btn" onclick="setSort('folder','oldest',this)">Oldest</div>
+    <div class="sort-btn" onclick="setSort('folder','az',this)">A–Z</div>
+    <div class="sort-btn" onclick="setSort('folder','pinned',this)">Pinned</div>
+    <div class="sort-btn" onclick="setTagFilter('folder','wip',this)">🟠 WIP</div>
+    <div class="sort-btn" onclick="setTagFilter('folder','done',this)">🟢 Done</div>
+    <div class="sort-btn" onclick="setTagFilter('folder','shelved',this)">⚫ Shelved</div>
+    <div class="sort-btn" onclick="setTagFilter('folder','fire',this)">🔴 Fire</div>
+  </div>
+  <div class="archive-btn-row"><div class="archive-toggle" id="folder-archive-toggle" onclick="toggleArchiveView('folder')">Show Archive</div></div>
   <div class="content-area">
     <div class="items-grid" id="folder-items-grid"></div>
     <div class="empty-state" id="folder-empty-state" style="display:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg><p>Folder empty — hit + to add</p></div>
   </div>
-  <div class="hint">Hold any item to rename</div>
+  <div class="hint">Hold any item for options</div>
 </div>
 
 <!-- NOTE -->
@@ -266,26 +362,45 @@
   <div class="dropdown-item" onclick="triggerAdd('folder')"><span>📁</span> New Folder</div>
   <div class="dropdown-item" onclick="triggerAdd('note')"><span>📝</span> New Note</div>
   <div class="dropdown-item" onclick="triggerAdd('png')"><span>🖼️</span> Add Image</div>
+  <div class="dropdown-item" onclick="triggerAdd('mp4')"><span>🎬</span> Add Video</div>
   <div class="dropdown-item" onclick="triggerAdd('mp3')"><span>🎵</span> Add Audio</div>
+  <div class="dropdown-item" onclick="triggerAdd('link')"><span>🔗</span> Save Link</div>
+</div>
+
+<!-- CONTEXT MENU -->
+<div class="ctx-menu" id="ctx-menu">
+  <div class="ctx-item" onclick="ctxRename()">✏️ Rename</div>
+  <div class="ctx-item" onclick="ctxPin()">📌 <span id="ctx-pin-label">Pin</span></div>
+  <div class="ctx-item" onclick="ctxDuplicate()">⧉ Duplicate</div>
+  <div class="ctx-item" onclick="ctxMove()">↗️ Move to...</div>
+  <div class="ctx-item danger" onclick="ctxArchive()">🗂 <span id="ctx-archive-label">Archive</span></div>
+  <div class="ctx-item danger" onclick="ctxDelete()">🗑 Delete</div>
 </div>
 
 <!-- MODALS -->
 <div class="modal-overlay" id="modal-folder"><div class="modal"><h3>NEW FOLDER</h3><input type="text" id="folder-name-input" placeholder="Folder name..." maxlength="40"/><div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('modal-folder')">Cancel</button><button class="btn btn-confirm" onclick="createFolder()">Create</button></div></div></div>
 <div class="modal-overlay" id="modal-note"><div class="modal"><h3>NEW NOTE</h3><input type="text" id="note-name-input" placeholder="Note title..." maxlength="40"/><div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('modal-note')">Cancel</button><button class="btn btn-confirm" onclick="createNote()">Create</button></div></div></div>
-<div class="modal-overlay" id="modal-png"><div class="modal"><h3>ADD IMAGE</h3><div class="file-drop-zone" onclick="document.getElementById('png-file-input').click()"><input type="file" id="png-file-input" accept="image/*" onchange="handleImageUpload(event)"/>Tap to choose an image</div><div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('modal-png')">Cancel</button></div></div></div>
-<div class="modal-overlay" id="modal-mp3"><div class="modal"><h3>ADD AUDIO</h3><div class="file-drop-zone" onclick="document.getElementById('mp3-file-input').click()"><input type="file" id="mp3-file-input" accept="audio/*" onchange="handleAudioUpload(event)"/>Tap to choose an audio file</div><div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('modal-mp3')">Cancel</button></div></div></div>
+<div class="modal-overlay" id="modal-png"><div class="modal"><h3>ADD IMAGE</h3><div class="file-drop-zone" onclick="document.getElementById('png-file-input').click()"><input type="file" id="png-file-input" accept="image/*" onchange="handleFileUpload(event,'image')"/>Tap to choose an image</div><div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('modal-png')">Cancel</button></div></div></div>
+<div class="modal-overlay" id="modal-mp4"><div class="modal"><h3>ADD VIDEO</h3><div class="file-drop-zone" onclick="document.getElementById('mp4-file-input').click()"><input type="file" id="mp4-file-input" accept="video/*" onchange="handleFileUpload(event,'video')"/>Tap to choose a video</div><div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('modal-mp4')">Cancel</button></div></div></div>
+<div class="modal-overlay" id="modal-mp3"><div class="modal"><h3>ADD AUDIO</h3><div class="file-drop-zone" onclick="document.getElementById('mp3-file-input').click()"><input type="file" id="mp3-file-input" accept="audio/*" onchange="handleFileUpload(event,'audio')"/>Tap to choose an audio file</div><div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('modal-mp3')">Cancel</button></div></div></div>
+<div class="modal-overlay" id="modal-link"><div class="modal"><h3>SAVE LINK</h3><input type="text" id="link-title-input" placeholder="Title..." maxlength="60"/><input type="url" id="link-url-input" placeholder="https://..." style="margin-top:0"/><div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('modal-link')">Cancel</button><button class="btn btn-confirm" onclick="createLink()">Save</button></div></div></div>
 <div class="modal-overlay" id="modal-rename"><div class="modal"><h3>RENAME</h3><input type="text" id="rename-input" placeholder="New name..." maxlength="40"/><div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('modal-rename')">Cancel</button><button class="btn btn-confirm" onclick="confirmRename()">Save</button></div></div></div>
+<div class="modal-overlay" id="modal-move">
+  <div class="modal"><h3>MOVE TO</h3><div class="move-section-list" id="move-section-list"></div><div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('modal-move')">Cancel</button></div></div>
+</div>
 
-<!-- IMAGE VIEWER -->
-<div class="img-viewer-overlay" id="img-viewer"><img id="img-viewer-src" src="" alt=""/><div class="img-close" onclick="document.getElementById('img-viewer').classList.remove('open')">✕ Close</div></div>
+<!-- MEDIA VIEWER -->
+<div class="media-viewer-overlay" id="media-viewer">
+  <div id="media-viewer-content"></div>
+  <div class="media-close" onclick="document.getElementById('media-viewer').classList.remove('open');document.getElementById('media-viewer-content').innerHTML=''">✕ Close</div>
+</div>
 
 <script type="module">
-import { initializeApp }                                          from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, createUserWithEmailAndPassword,
-         signInWithEmailAndPassword, signInWithRedirect,
-         getRedirectResult, GoogleAuthProvider,
-         signOut, onAuthStateChanged }                            from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, doc, getDoc, setDoc }                     from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { initializeApp }          from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+         signInWithRedirect, getRedirectResult, GoogleAuthProvider,
+         signOut, onAuthStateChanged }   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey:            "AIzaSyCrAK0k453pXxAkNX-ngF9qtvD_NxM0QlI",
@@ -296,143 +411,114 @@ const firebaseConfig = {
   appId:             "1:324506246397:web:8fe6e0a97be2fa245e3294",
   measurementId:     "G-PEX8N44FX3"
 };
-
-const app       = initializeApp(firebaseConfig);
-const auth      = getAuth(app);
-const db        = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 const gProvider = new GoogleAuthProvider();
 
 // ── STATE ──────────────────────────────────────────────────────────────
-const SECTIONS  = ['MUSIC','GRAPHICS','FASHION','FILM','TECH','PORTFOLIO'];
-let vault       = {};
-let currentUser = null;
-let curSection  = null;
-let curFolder   = null;
-let curNoteKey  = null;
-let curNoteCtx  = null;
+const SECTIONS = ['MUSIC','GRAPHICS','FASHION','FILM','TECH','PORTFOLIO'];
+let vault = {}, currentUser = null;
+let curSection = null, curFolder = null;
+let curNoteKey = null, curNoteCtx = null;
 let addToFolder = false;
-let renameKey   = null;
-let renameCtx   = null;
-let noteTimer   = null;
-
+let renameKey = null, renameCtx = null;
+let moveKey = null, moveCtx = null;
+let ctxKey = null, ctxCtx = null;
+let noteTimer = null;
+let sectionSort = 'newest', folderSort = 'newest';
+let sectionTagFilter = null, folderTagFilter = null;
+let sectionShowArchive = false, folderShowArchive = false;
+let sectionListView = false, folderListView = false;
 SECTIONS.forEach(s => { vault[s] = []; });
 
 // ── UTILS ──────────────────────────────────────────────────────────────
-function uid()    { return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
-function esc(s)   { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function show(id) { document.getElementById(id).classList.remove('hidden'); }
-function hide(id) { document.getElementById(id).classList.add('hidden'); }
+const uid  = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const esc  = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const show = id => document.getElementById(id).classList.remove('hidden');
+const hide = id => document.getElementById(id).classList.add('hidden');
 
 function timeAgo(ts) {
   if (!ts) return '';
-  const d = Date.now()-ts, m = Math.floor(d/60000);
-  if (m<1) return 'just now';
-  if (m<60) return m+'m ago';
-  const h = Math.floor(m/60);
-  if (h<24) return h+'h ago';
-  const dy = Math.floor(h/24);
-  if (dy<7) return dy+'d ago';
+  const d=Date.now()-ts, m=Math.floor(d/60000);
+  if(m<1) return 'just now'; if(m<60) return m+'m ago';
+  const h=Math.floor(m/60); if(h<24) return h+'h ago';
+  const dy=Math.floor(h/24); if(dy<7) return dy+'d ago';
   return new Date(ts).toLocaleDateString();
 }
 
 function showToast(msg) {
-  const old = document.querySelector('.toast'); if (old) old.remove();
-  const t = document.createElement('div'); t.className='toast'; t.textContent=msg;
-  document.body.appendChild(t); setTimeout(()=>t.remove(), 2400);
+  const old=document.querySelector('.toast'); if(old) old.remove();
+  const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+  document.body.appendChild(t); setTimeout(()=>t.remove(),2400);
 }
 
 // ── FIRESTORE ──────────────────────────────────────────────────────────
-function userRef() { return doc(db,'vaults',currentUser.uid); }
+const userRef = () => doc(db,'vaults',currentUser.uid);
 
 async function loadVault() {
   try {
     const snap = await getDoc(userRef());
-    if (snap.exists()) {
-      const data = snap.data();
-      SECTIONS.forEach(s => { vault[s] = data[s] || []; });
-    } else {
-      const init = {}; SECTIONS.forEach(s => { init[s]=[]; });
-      await setDoc(userRef(), init);
-    }
-  } catch(e) { showToast('Could not load vault: '+e.message); }
+    if (snap.exists()) { const d=snap.data(); SECTIONS.forEach(s=>{vault[s]=d[s]||[];}); }
+    else { const init={}; SECTIONS.forEach(s=>{init[s]=[];}); await setDoc(userRef(),init); }
+  } catch(e) { showToast('Load error: '+e.message); }
 }
 
 async function saveVault() {
-  try {
-    const data = {}; SECTIONS.forEach(s => { data[s]=vault[s]; });
-    await setDoc(userRef(), data);
-  } catch(e) { showToast('Save failed: '+e.message); }
+  try { const d={}; SECTIONS.forEach(s=>{d[s]=vault[s];}); await setDoc(userRef(),d); }
+  catch(e) { showToast('Save error: '+e.message); }
 }
 
-// ── AUTH UI ────────────────────────────────────────────────────────────
+// ── SPLASH ─────────────────────────────────────────────────────────────
+setTimeout(() => {
+  hide('splash-screen');
+  show('loading-screen');
+}, 2000);
+
+// ── AUTH ───────────────────────────────────────────────────────────────
 let authMode = 'login';
-
 window.switchTab = function(mode) {
-  authMode = mode;
-  document.getElementById('tab-login').classList.toggle('active', mode==='login');
-  document.getElementById('tab-signup').classList.toggle('active', mode==='signup');
-  document.getElementById('auth-submit-btn').textContent = mode==='login' ? 'Sign In' : 'Create Account';
-  document.getElementById('auth-pass2').classList.toggle('hidden', mode==='login');
-  document.getElementById('auth-error').textContent = '';
+  authMode=mode;
+  document.getElementById('tab-login').classList.toggle('active',mode==='login');
+  document.getElementById('tab-signup').classList.toggle('active',mode==='signup');
+  document.getElementById('auth-submit-btn').textContent=mode==='login'?'Sign In':'Create Account';
+  document.getElementById('auth-error').textContent='';
 };
-
 window.handleAuth = async function() {
-  const email = document.getElementById('auth-email').value.trim();
-  const pass  = document.getElementById('auth-pass').value;
-  const pass2 = document.getElementById('auth-pass2').value;
-  const errEl = document.getElementById('auth-error');
-  const btn   = document.getElementById('auth-submit-btn');
-  errEl.textContent = '';
-  if (!email||!pass) { errEl.textContent='Please fill in all fields.'; return; }
-  if (authMode==='signup'&&pass!==pass2) { errEl.textContent='Passwords do not match.'; return; }
-  if (authMode==='signup'&&pass.length<6) { errEl.textContent='Password must be at least 6 characters.'; return; }
-  btn.disabled = true;
+  const email=document.getElementById('auth-email').value.trim();
+  const pass=document.getElementById('auth-pass').value;
+  const errEl=document.getElementById('auth-error');
+  const btn=document.getElementById('auth-submit-btn');
+  errEl.textContent='';
+  if(!email||!pass){errEl.textContent='Please fill in all fields.';return;}
+  if(authMode==='signup'&&pass.length<6){errEl.textContent='Password must be at least 6 characters.';return;}
+  btn.disabled=true;
   try {
-    if (authMode==='login') await signInWithEmailAndPassword(auth, email, pass);
-    else await createUserWithEmailAndPassword(auth, email, pass);
-  } catch(e) {
-    errEl.textContent = friendlyError(e.code);
-    btn.disabled = false;
-  }
+    if(authMode==='login') await signInWithEmailAndPassword(auth,email,pass);
+    else await createUserWithEmailAndPassword(auth,email,pass);
+  } catch(e) { errEl.textContent=friendlyError(e.code); btn.disabled=false; }
 };
-
 window.handleGoogle = async function() {
-  try { await signInWithRedirect(auth, gProvider); }
-  catch(e) { document.getElementById('auth-error').textContent = friendlyError(e.code); }
+  try { await signInWithRedirect(auth,gProvider); }
+  catch(e) { document.getElementById('auth-error').textContent=friendlyError(e.code); }
 };
-
 window.handleLogout = async function() { await signOut(auth); };
-
 function friendlyError(code) {
-  const m = {
-    'auth/user-not-found':       'No account found with that email.',
-    'auth/wrong-password':       'Incorrect password.',
-    'auth/email-already-in-use': 'That email is already registered.',
-    'auth/invalid-email':        'Please enter a valid email.',
-    'auth/too-many-requests':    'Too many attempts — try again later.',
-    'auth/invalid-credential':   'Incorrect email or password.',
-    'auth/popup-closed-by-user': 'Sign-in cancelled.',
-    'auth/network-request-failed': 'Network error — check your connection.',
-  };
-  return m[code] || ('Error: '+code);
+  const m={'auth/user-not-found':'No account found.','auth/wrong-password':'Incorrect password.','auth/email-already-in-use':'Email already registered.','auth/invalid-email':'Invalid email.','auth/too-many-requests':'Too many attempts — try later.','auth/invalid-credential':'Incorrect email or password.'};
+  return m[code]||('Error: '+code);
 }
+getRedirectResult(auth).catch(e=>console.warn('redirect:',e.code));
 
-// Handle Google redirect on page load
-getRedirectResult(auth).catch(e => { console.warn('redirect:', e.code); });
-
-// ── AUTH STATE ─────────────────────────────────────────────────────────
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    currentUser = user;
-    document.getElementById('user-email-display').textContent = user.email || user.displayName || '';
+onAuthStateChanged(auth, async user => {
+  if(user) {
+    currentUser=user;
     await loadVault();
     hide('loading-screen'); hide('auth-screen');
     show('home'); updateBadges();
   } else {
-    currentUser = null;
-    vault = {}; SECTIONS.forEach(s => { vault[s]=[]; });
+    currentUser=null; vault={}; SECTIONS.forEach(s=>{vault[s]=[];});
     hide('loading-screen'); hide('home');
-    hide('section-screen'); hide('folder-screen'); hide('note-viewer');
+    ['section-screen','folder-screen','note-viewer'].forEach(hide);
     show('auth-screen');
   }
 });
@@ -440,34 +526,34 @@ onAuthStateChanged(auth, async (user) => {
 // ── BADGES ─────────────────────────────────────────────────────────────
 function updateBadges() {
   SECTIONS.forEach(s => {
-    const n=(vault[s]||[]).length, el=document.getElementById('badge-'+s);
-    if (!el) return;
-    el.textContent = n ? n+(n===1?' item':' items') : '';
-    el.classList.toggle('has', n>0);
+    const n=(vault[s]||[]).filter(i=>!i.archived).length;
+    const el=document.getElementById('badge-'+s); if(!el) return;
+    el.textContent=n?n+(n===1?' item':' items'):'';
+    el.classList.toggle('has',n>0);
   });
 }
 
-// ── NAV ────────────────────────────────────────────────────────────────
-window.openSection = function(name) {
-  curSection=name;
-  document.getElementById('section-title-text').textContent=name;
+// ── NAVIGATION ─────────────────────────────────────────────────────────
+window.openSection = s => {
+  curSection=s; sectionTagFilter=null; sectionShowArchive=false; sectionSort='newest';
+  document.getElementById('section-title-text').textContent=s;
   document.getElementById('section-search').value='';
+  document.getElementById('section-archive-toggle').textContent='Show Archive';
+  resetSortBar('section-sort-bar');
   show('section-screen'); hide('home'); renderItems();
 };
-window.goHome = function() {
-  hide('section-screen'); show('home'); curSection=null; updateBadges();
-};
-window.openFolder = function(key) {
+window.goHome = () => { hide('section-screen'); show('home'); curSection=null; updateBadges(); };
+window.openFolder = key => {
   const f=(vault[curSection]||[]).find(i=>i.key===key); if(!f) return;
-  curFolder=key;
+  curFolder=key; folderTagFilter=null; folderShowArchive=false; folderSort='newest';
   document.getElementById('folder-title-text').textContent=f.name;
   document.getElementById('folder-search').value='';
+  document.getElementById('folder-archive-toggle').textContent='Show Archive';
+  resetSortBar('folder-sort-bar');
   hide('section-screen'); show('folder-screen'); renderFolderItems();
 };
-window.closeFolder = function() {
-  hide('folder-screen'); show('section-screen'); curFolder=null; renderItems();
-};
-window.openNote = function(key, ctx) {
+window.closeFolder = () => { hide('folder-screen'); show('section-screen'); curFolder=null; renderItems(); };
+window.openNote = (key,ctx) => {
   const items=ctx==='folder'?getFolderItems():(vault[curSection]||[]);
   const item=items.find(i=>i.key===key); if(!item) return;
   curNoteKey=key; curNoteCtx=ctx;
@@ -475,18 +561,18 @@ window.openNote = function(key, ctx) {
   document.getElementById('note-textarea').value=item.content||'';
   hide(ctx==='folder'?'folder-screen':'section-screen'); show('note-viewer');
 };
-window.closeNote = function() {
+window.closeNote = () => {
   hide('note-viewer');
   if(curNoteCtx==='folder'){show('folder-screen');renderFolderItems();}
   else{show('section-screen');renderItems();}
   curNoteKey=null; curNoteCtx=null;
 };
-window.saveNoteContent = function() {
+window.saveNoteContent = () => {
   if(!curNoteKey) return;
   const items=curNoteCtx==='folder'?getFolderItems():(vault[curSection]||[]);
   const item=items.find(i=>i.key===curNoteKey);
   if(item){item.content=document.getElementById('note-textarea').value;item.updatedAt=Date.now();}
-  clearTimeout(noteTimer); noteTimer=setTimeout(saveVault, 1500);
+  clearTimeout(noteTimer); noteTimer=setTimeout(saveVault,1500);
 };
 
 // ── FOLDER HELPERS ─────────────────────────────────────────────────────
@@ -499,52 +585,257 @@ function pushToCurrentFolder(item) {
   if(f){if(!f.children)f.children=[];f.children.push(item);f.updatedAt=Date.now();}
 }
 
+// ── SORT / FILTER ──────────────────────────────────────────────────────
+window.setSort = (ctx,mode,el) => {
+  if(ctx==='section') sectionSort=mode; else folderSort=mode;
+  document.querySelectorAll(`#${ctx}-sort-bar .sort-btn`).forEach(b=>{
+    if(!b.dataset.filter) b.classList.remove('active');
+  });
+  el.classList.add('active');
+  ctx==='section'?renderItems():renderFolderItems();
+};
+window.setTagFilter = (ctx,tag,el) => {
+  const cur = ctx==='section'?sectionTagFilter:folderTagFilter;
+  const next = cur===tag?null:tag;
+  if(ctx==='section') sectionTagFilter=next; else folderTagFilter=next;
+  el.dataset.filter='1';
+  document.querySelectorAll(`#${ctx}-sort-bar .sort-btn[data-filter]`).forEach(b=>b.classList.remove('active'));
+  if(next) el.classList.add('active');
+  ctx==='section'?renderItems():renderFolderItems();
+};
+function resetSortBar(barId) {
+  const bar=document.getElementById(barId);
+  bar.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+  bar.querySelector('.sort-btn').classList.add('active');
+}
+function applySort(items,mode) {
+  const arr=[...items];
+  if(mode==='pinned') return [...arr.filter(i=>i.pinned),...arr.filter(i=>!i.pinned)];
+  if(mode==='az') return arr.sort((a,b)=>a.name.localeCompare(b.name));
+  if(mode==='oldest') return arr.sort((a,b)=>(a.updatedAt||0)-(b.updatedAt||0));
+  return arr.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+}
+
+// ── ARCHIVE ────────────────────────────────────────────────────────────
+window.toggleArchiveView = ctx => {
+  if(ctx==='section') {
+    sectionShowArchive=!sectionShowArchive;
+    document.getElementById('section-archive-toggle').textContent=sectionShowArchive?'Hide Archive':'Show Archive';
+    renderItems();
+  } else {
+    folderShowArchive=!folderShowArchive;
+    document.getElementById('folder-archive-toggle').textContent=folderShowArchive?'Hide Archive':'Show Archive';
+    renderFolderItems();
+  }
+};
+
+// ── VIEW TOGGLE ────────────────────────────────────────────────────────
+const LIST_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`;
+const GRID_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>`;
+
+window.toggleView = ctx => {
+  if(ctx==='section') {
+    sectionListView=!sectionListView;
+    document.getElementById('section-view-icon').outerHTML=`<svg id="section-view-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sectionListView?'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>':'<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>'}</svg>`;
+    renderItems();
+  } else {
+    folderListView=!folderListView;
+    document.getElementById('folder-view-icon').outerHTML=`<svg id="folder-view-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${folderListView?'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>':'<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>'}</svg>`;
+    renderFolderItems();
+  }
+};
+
 // ── RENDER ─────────────────────────────────────────────────────────────
-window.renderItems = function() {
+window.renderItems = () => {
   const q=(document.getElementById('section-search').value||'').toLowerCase();
   let items=vault[curSection]||[];
+  items=items.filter(i=>sectionShowArchive?i.archived:!i.archived);
+  if(sectionTagFilter) items=items.filter(i=>i.tag===sectionTagFilter);
   if(q) items=items.filter(i=>i.name.toLowerCase().includes(q));
+  items=applySort(items,sectionSort);
+  const grid=document.getElementById('items-grid');
+  grid.className='items-grid'+(sectionListView?' list-view':'');
   renderGrid('items-grid','empty-state',items,'section');
 };
-window.renderFolderItems = function() {
+window.renderFolderItems = () => {
   const f=(vault[curSection]||[]).find(i=>i.key===curFolder);
   if(f) document.getElementById('folder-title-text').textContent=f.name;
   const q=(document.getElementById('folder-search').value||'').toLowerCase();
   let items=getFolderItems();
+  items=items.filter(i=>folderShowArchive?i.archived:!i.archived);
+  if(folderTagFilter) items=items.filter(i=>i.tag===folderTagFilter);
   if(q) items=items.filter(i=>i.name.toLowerCase().includes(q));
+  items=applySort(items,folderSort);
+  const grid=document.getElementById('folder-items-grid');
+  grid.className='items-grid'+(folderListView?' list-view':'');
   renderGrid('folder-items-grid','folder-empty-state',items,'folder');
 };
-
-function renderGrid(gridId, emptyId, items, ctx) {
+function renderGrid(gridId,emptyId,items,ctx) {
   const grid=document.getElementById(gridId), empty=document.getElementById(emptyId);
   grid.innerHTML=''; empty.style.display=items.length?'none':'flex';
   items.forEach((item,i)=>grid.appendChild(buildCard(item,i,ctx)));
 }
 
-function buildCard(item, idx, ctx) {
-  const el=document.createElement('div'); el.className='vault-item';
-  el.style.animationDelay=(idx*28)+'ms';
+// ── BUILD CARD ─────────────────────────────────────────────────────────
+const TAGS=[{id:'wip',color:'#f5a623',label:'WIP'},{id:'done',color:'#4cd964',label:'Done'},{id:'shelved',color:'#8e8e93',label:'Shelved'},{id:'fire',color:'#f55',label:'Fire'}];
+
+function buildCard(item,idx,ctx) {
+  const el=document.createElement('div');
+  el.className='vault-item'+(item.archived?' archived':'');
+  el.style.animationDelay=(idx*24)+'ms';
   const ts=item.updatedAt?`<div class="item-ts">${timeAgo(item.updatedAt)}</div>`:'';
+  const tag=item.tag?TAGS.find(t=>t.id===item.tag):null;
+  const tagDot=tag
+    ?`<div class="tag-dots"><div class="tag-dot ${tag.id} active-tag" onclick="openTagPicker('${item.key}','${ctx}',event)" title="${tag.label}"></div></div>`
+    :`<div class="tag-dots"><div class="tag-dot empty-tag" onclick="openTagPicker('${item.key}','${ctx}',event)" title="Set status"></div></div>`;
+  const pickerDots=TAGS.map(t=>`<div class="tp-dot" style="background:${t.color};" onclick="setTag('${item.key}','${ctx}','${t.id}',event)" title="${t.label}"></div>`).join('');
+  const picker=`<div class="tag-picker" id="tp-${item.key}">${pickerDots}<div class="tp-clear" onclick="setTag('${item.key}','${ctx}',null,event)">✕</div></div>`;
+  const pinBtn=`<div class="pin-indicator${item.pinned?' pinned':''}" onclick="event.stopPropagation();quickPin('${item.key}','${ctx}')" title="${item.pinned?'Unpin':'Pin'}">📌</div>`;
+
   if(item.type==='folder'){
-    const n=item.children?.length||0;
-    el.innerHTML=`<div class="item-del">✕</div><div class="item-icon">📁</div><div class="item-name">${esc(item.name)}</div><div class="item-meta">${n} item${n!==1?'s':''}</div>${ts}`;
+    const n=item.children?.filter(i=>!i.archived).length||0;
+    el.innerHTML=`<div class="item-del">✕</div>${pinBtn}<div class="item-icon">📁</div><div class="item-name">${esc(item.name)}</div><div class="item-meta">${n} item${n!==1?'s':''}</div>${tagDot}${ts}${picker}`;
     el.addEventListener('click',()=>window.openFolder(item.key));
   } else if(item.type==='note'){
-    el.innerHTML=`<div class="item-del">✕</div><div class="item-icon">📝</div><div class="item-name">${esc(item.name)}</div><div class="note-preview">${esc(item.content||'Empty note')}</div>${ts}`;
+    el.innerHTML=`<div class="item-del">✕</div>${pinBtn}<div class="item-icon">📝</div><div class="item-name">${esc(item.name)}</div><div class="note-preview">${esc(item.content||'Empty note')}</div>${tagDot}${ts}${picker}`;
     el.addEventListener('click',()=>window.openNote(item.key,ctx));
   } else if(item.type==='image'){
-    el.innerHTML=`<div class="item-del">✕</div><img src="${item.dataUrl}" style="width:100%;border-radius:5px;object-fit:cover;aspect-ratio:16/9;" loading="lazy"/><div class="item-name">${esc(item.name)}</div>${ts}`;
-    el.addEventListener('click',()=>{document.getElementById('img-viewer-src').src=item.dataUrl;document.getElementById('img-viewer').classList.add('open');});
+    el.innerHTML=`<div class="item-del">✕</div>${pinBtn}<img src="${item.dataUrl}" style="width:100%;border-radius:5px;object-fit:cover;aspect-ratio:16/9;" loading="lazy"/><div class="item-name">${esc(item.name)}</div>${tagDot}${ts}${picker}`;
+    el.addEventListener('click',()=>openMediaViewer('image',item.dataUrl));
+  } else if(item.type==='video'){
+    el.innerHTML=`<div class="item-del">✕</div>${pinBtn}<div class="item-icon">🎬</div><div class="item-name">${esc(item.name)}</div><div class="item-meta">Video</div>${tagDot}${ts}${picker}`;
+    el.addEventListener('click',()=>openMediaViewer('video',item.dataUrl));
   } else if(item.type==='audio'){
-    el.innerHTML=`<div class="item-del">✕</div><div class="item-icon">🎵</div><div class="item-name">${esc(item.name)}</div><audio controls src="${item.dataUrl}" style="width:100%;margin-top:0.3rem;accent-color:#5bc8f5;" onclick="event.stopPropagation()"></audio>${ts}`;
+    el.innerHTML=`<div class="item-del">✕</div>${pinBtn}<div class="item-icon">🎵</div><div class="item-name">${esc(item.name)}</div><audio controls src="${item.dataUrl}" style="width:100%;margin-top:0.3rem;accent-color:#5bc8f5;" onclick="event.stopPropagation()"></audio>${tagDot}${ts}${picker}`;
+  } else if(item.type==='link'){
+    el.innerHTML=`<div class="item-del">✕</div>${pinBtn}<div class="item-icon">🔗</div><div class="item-name">${esc(item.name)}</div><div class="item-meta" style="word-break:break-all;font-size:0.58rem;">${esc(item.url)}</div>${tagDot}${ts}${picker}`;
+    el.addEventListener('click',()=>window.open(item.url,'_blank'));
   }
-  el.querySelector('.item-del').addEventListener('click',e=>{e.stopPropagation();deleteItem(item.key,ctx);});
-  setupLongPress(el,()=>startRename(item.key,ctx,item.name));
+
+  el.querySelector('.item-del').addEventListener('click',e=>{e.stopPropagation();hardDelete(item.key,ctx);});
+  setupLongPress(el,()=>openCtxMenu(item.key,ctx,item));
+  setupSwipe(el,item.key,ctx);
   return el;
 }
 
+// ── MEDIA VIEWER ───────────────────────────────────────────────────────
+function openMediaViewer(type,src) {
+  const el=document.getElementById('media-viewer-content');
+  el.innerHTML=type==='video'
+    ?`<video controls autoplay src="${src}" style="max-width:90vw;max-height:80vh;border-radius:8px;"></video>`
+    :`<img src="${src}" style="max-width:90vw;max-height:80vh;border-radius:8px;"/>`;
+  document.getElementById('media-viewer').classList.add('open');
+}
+
+// ── TAG ────────────────────────────────────────────────────────────────
+window.openTagPicker = (key,ctx,e) => {
+  e.stopPropagation();
+  document.querySelectorAll('.tag-picker.open').forEach(p=>p.classList.remove('open'));
+  const p=document.getElementById('tp-'+key);
+  if(p) p.classList.add('open');
+};
+window.setTag = async (key,ctx,tagId,e) => {
+  e.stopPropagation();
+  const items=ctx==='folder'?getFolderItems():(vault[curSection]||[]);
+  const item=items.find(i=>i.key===key);
+  if(item){item.tag=(item.tag===tagId)?null:tagId;item.updatedAt=Date.now();await saveVault();}
+  document.querySelectorAll('.tag-picker.open').forEach(p=>p.classList.remove('open'));
+  ctx==='folder'?renderFolderItems():renderItems();
+};
+document.addEventListener('click',()=>document.querySelectorAll('.tag-picker.open').forEach(p=>p.classList.remove('open')));
+
+// ── PIN ────────────────────────────────────────────────────────────────
+async function quickPin(key,ctx) {
+  const items=ctx==='folder'?getFolderItems():(vault[curSection]||[]);
+  const item=items.find(i=>i.key===key);
+  if(item){item.pinned=!item.pinned;item.updatedAt=Date.now();await saveVault();}
+  ctx==='folder'?renderFolderItems():renderItems();
+}
+
+// ── SWIPE TO DELETE ────────────────────────────────────────────────────
+function setupSwipe(el,key,ctx) {
+  let startX=0, moved=false;
+  el.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;moved=false;},{passive:true});
+  el.addEventListener('touchmove',e=>{
+    const dx=e.touches[0].clientX-startX;
+    if(dx<-20){moved=true;el.style.transform=`translateX(${Math.max(dx,-80)}px)`;el.style.transition='none';}
+  },{passive:true});
+  el.addEventListener('touchend',e=>{
+    el.style.transition='transform 0.2s ease';
+    const dx=e.changedTouches[0].clientX-startX;
+    if(moved&&dx<-60){el.style.transform='translateX(-100%)';setTimeout(()=>hardDelete(key,ctx),200);}
+    else{el.style.transform='translateX(0)';}
+  });
+}
+
+// ── CONTEXT MENU ───────────────────────────────────────────────────────
+function openCtxMenu(key,ctx,item) {
+  ctxKey=key; ctxCtx=ctx;
+  document.getElementById('ctx-pin-label').textContent=item.pinned?'Unpin':'Pin';
+  document.getElementById('ctx-archive-label').textContent=item.archived?'Unarchive':'Archive';
+  const menu=document.getElementById('ctx-menu');
+  menu.classList.add('open');
+  // position in center
+  menu.style.top='50%'; menu.style.left='50%';
+  menu.style.transform='translate(-50%,-50%)';
+}
+document.addEventListener('click',e=>{
+  const menu=document.getElementById('ctx-menu');
+  if(!menu.contains(e.target)) menu.classList.remove('open');
+});
+
+window.ctxRename = () => { document.getElementById('ctx-menu').classList.remove('open'); startRename(ctxKey,ctxCtx); };
+window.ctxPin = async () => {
+  document.getElementById('ctx-menu').classList.remove('open');
+  await quickPin(ctxKey,ctxCtx);
+};
+window.ctxDuplicate = async () => {
+  document.getElementById('ctx-menu').classList.remove('open');
+  const items=ctxCtx==='folder'?getFolderItems():(vault[curSection]||[]);
+  const item=items.find(i=>i.key===ctxKey);
+  if(!item) return;
+  const copy={...JSON.parse(JSON.stringify(item)),key:uid(),name:item.name+' (copy)',updatedAt:Date.now(),pinned:false};
+  if(ctxCtx==='folder'){pushToCurrentFolder(copy);}else{vault[curSection].push(copy);}
+  await saveVault();
+  ctxCtx==='folder'?renderFolderItems():renderItems();
+  showToast('Duplicated ✓');
+};
+window.ctxMove = () => {
+  document.getElementById('ctx-menu').classList.remove('open');
+  moveKey=ctxKey; moveCtx=ctxCtx;
+  const list=document.getElementById('move-section-list');
+  list.innerHTML=SECTIONS.map(s=>`<div class="move-section-item${s===curSection?' current':''}" onclick="confirmMove('${s}')">${s}</div>`).join('');
+  openModal('modal-move');
+};
+window.confirmMove = async toSection => {
+  closeModal('modal-move');
+  if(!moveKey||toSection===curSection) return;
+  const items=moveCtx==='folder'?getFolderItems():(vault[curSection]||[]);
+  const idx=items.findIndex(i=>i.key===moveKey);
+  if(idx===-1) return;
+  const [item]=items.splice(idx,1);
+  item.updatedAt=Date.now();
+  if(!vault[toSection]) vault[toSection]=[];
+  vault[toSection].push(item);
+  await saveVault();
+  moveCtx==='folder'?renderFolderItems():renderItems();
+  showToast(`Moved to ${toSection} ✓`);
+};
+window.ctxArchive = async () => {
+  document.getElementById('ctx-menu').classList.remove('open');
+  const items=ctxCtx==='folder'?getFolderItems():(vault[curSection]||[]);
+  const item=items.find(i=>i.key===ctxKey);
+  if(item){item.archived=!item.archived;item.updatedAt=Date.now();await saveVault();}
+  ctxCtx==='folder'?renderFolderItems():renderItems();
+  showToast(item?.archived?'Archived':'Restored');
+};
+window.ctxDelete = async () => {
+  document.getElementById('ctx-menu').classList.remove('open');
+  await hardDelete(ctxKey,ctxCtx);
+};
+
 // ── DELETE ─────────────────────────────────────────────────────────────
-async function deleteItem(key, ctx) {
+async function hardDelete(key,ctx) {
   if(ctx==='folder'){
     const f=(vault[curSection]||[]).find(i=>i.key===curFolder);
     if(f){f.children=(f.children||[]).filter(i=>i.key!==key);}
@@ -555,8 +846,28 @@ async function deleteItem(key, ctx) {
   }
 }
 
+// ── RENAME ─────────────────────────────────────────────────────────────
+function startRename(key,ctx) {
+  renameKey=key; renameCtx=ctx;
+  const items=ctx==='folder'?getFolderItems():(vault[curSection]||[]);
+  const item=items.find(i=>i.key===key);
+  const inp=document.getElementById('rename-input');
+  inp.value=item?.name||'';
+  openModal('modal-rename');
+  setTimeout(()=>inp.select(),110);
+}
+window.confirmRename = async () => {
+  const name=document.getElementById('rename-input').value.trim();
+  if(!name||!renameKey){closeModal('modal-rename');return;}
+  const items=renameCtx==='folder'?getFolderItems():(vault[curSection]||[]);
+  const item=items.find(i=>i.key===renameKey);
+  if(item){item.name=name;item.updatedAt=Date.now();await saveVault();}
+  renameCtx==='folder'?renderFolderItems():renderItems();
+  closeModal('modal-rename'); renameKey=null; renameCtx=null;
+};
+
 // ── LONG PRESS ─────────────────────────────────────────────────────────
-function setupLongPress(el, cb) {
+function setupLongPress(el,cb) {
   let t=null;
   const s=()=>{t=setTimeout(()=>{el.classList.add('pressing');cb();},580);};
   const c=()=>{clearTimeout(t);el.classList.remove('pressing');};
@@ -564,32 +875,17 @@ function setupLongPress(el, cb) {
   ['mouseup','mouseleave','touchend','touchcancel'].forEach(ev=>el.addEventListener(ev,c));
 }
 
-function startRename(key,ctx,name) {
-  renameKey=key;renameCtx=ctx;
-  const inp=document.getElementById('rename-input'); inp.value=name;
-  openModal('modal-rename'); setTimeout(()=>inp.select(),110);
-}
-window.confirmRename = async function() {
-  const name=document.getElementById('rename-input').value.trim();
-  if(!name||!renameKey){closeModal('modal-rename');return;}
-  const items=renameCtx==='folder'?getFolderItems():(vault[curSection]||[]);
-  const item=items.find(i=>i.key===renameKey);
-  if(item){item.name=name;item.updatedAt=Date.now();await saveVault();}
-  if(renameCtx==='folder')renderFolderItems();else renderItems();
-  closeModal('modal-rename');renameKey=null;renameCtx=null;
-};
-
 // ── DROPDOWN ───────────────────────────────────────────────────────────
-window.openDropdown = function(toFolder) {
+window.openDropdown = toFolder => {
   addToFolder=!!toFolder;
   document.getElementById('dropdown-overlay').classList.add('open');
   document.getElementById('dropdown-menu').classList.add('open');
 };
-window.closeDropdown = function() {
+window.closeDropdown = () => {
   document.getElementById('dropdown-overlay').classList.remove('open');
   document.getElementById('dropdown-menu').classList.remove('open');
 };
-window.triggerAdd = function(type) { window.closeDropdown(); openModal('modal-'+type); };
+window.triggerAdd = type => { window.closeDropdown(); openModal('modal-'+type); };
 
 // ── MODALS ─────────────────────────────────────────────────────────────
 function openModal(id){document.getElementById(id).classList.add('open');}
@@ -597,50 +893,53 @@ function closeModal(id){document.getElementById(id).classList.remove('open');}
 window.closeModal=closeModal;
 
 async function pushItem(item) {
-  if(addToFolder){pushToCurrentFolder(item);}
-  else{vault[curSection].push(item);}
+  if(addToFolder){pushToCurrentFolder(item);}else{vault[curSection].push(item);}
   await saveVault();
-  if(addToFolder)renderFolderItems();else renderItems();
+  addToFolder?renderFolderItems():renderItems();
 }
 
-window.createFolder = async function() {
+window.createFolder = async () => {
   const name=document.getElementById('folder-name-input').value.trim(); if(!name) return;
   vault[curSection].push({key:uid(),type:'folder',name,children:[],updatedAt:Date.now()});
   await saveVault(); renderItems();
   document.getElementById('folder-name-input').value=''; closeModal('modal-folder');
 };
-window.createNote = async function() {
+window.createNote = async () => {
   const name=document.getElementById('note-name-input').value.trim(); if(!name) return;
   await pushItem({key:uid(),type:'note',name,content:'',updatedAt:Date.now()});
   document.getElementById('note-name-input').value=''; closeModal('modal-note');
 };
-window.handleImageUpload = async function(e) {
-  const file=e.target.files[0]; if(!file) return;
-  const r=new FileReader();
-  r.onload=async ev=>{
-    await pushItem({key:uid(),type:'image',name:file.name,dataUrl:ev.target.result,updatedAt:Date.now()});
-    closeModal('modal-png'); e.target.value='';
-  };
-  r.readAsDataURL(file);
+window.createLink = async () => {
+  const name=document.getElementById('link-title-input').value.trim();
+  let url=document.getElementById('link-url-input').value.trim();
+  if(!name||!url) return;
+  if(!url.startsWith('http')) url='https://'+url;
+  await pushItem({key:uid(),type:'link',name,url,updatedAt:Date.now()});
+  document.getElementById('link-title-input').value='';
+  document.getElementById('link-url-input').value='';
+  closeModal('modal-link');
 };
-window.handleAudioUpload = async function(e) {
+window.handleFileUpload = async (e,type) => {
   const file=e.target.files[0]; if(!file) return;
+  const modalMap={image:'modal-png',video:'modal-mp4',audio:'modal-mp3'};
+  closeModal(modalMap[type]); e.target.value='';
+  showToast('Saving...');
   const r=new FileReader();
   r.onload=async ev=>{
-    await pushItem({key:uid(),type:'audio',name:file.name,dataUrl:ev.target.result,updatedAt:Date.now()});
-    closeModal('modal-mp3'); e.target.value='';
+    await pushItem({key:uid(),type,name:file.name,dataUrl:ev.target.result,updatedAt:Date.now()});
+    showToast('Saved ✓');
   };
   r.readAsDataURL(file);
 };
 
 // ── INIT ───────────────────────────────────────────────────────────────
-document.querySelectorAll('.modal-overlay').forEach(o=>{o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');});});
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
 document.getElementById('folder-name-input').addEventListener('keydown',e=>{if(e.key==='Enter')window.createFolder();});
 document.getElementById('note-name-input').addEventListener('keydown',e=>{if(e.key==='Enter')window.createNote();});
 document.getElementById('rename-input').addEventListener('keydown',e=>{if(e.key==='Enter')window.confirmRename();});
 document.getElementById('auth-email').addEventListener('keydown',e=>{if(e.key==='Enter')window.handleAuth();});
 document.getElementById('auth-pass').addEventListener('keydown',e=>{if(e.key==='Enter')window.handleAuth();});
-document.getElementById('auth-pass2').addEventListener('keydown',e=>{if(e.key==='Enter')window.handleAuth();});
 </script>
 </body>
 </html>
+
