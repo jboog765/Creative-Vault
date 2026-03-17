@@ -4,7 +4,7 @@
 
 A personal vault app built for creatives who never stop building — and never delete anything. CREATD lets you organize your music, graphics, fashion, film, tech projects, and portfolio all in one place. Finished or not, touched last week or two years ago, everything stays categorized, searchable, and alive.
 
-Built by **APG JBOOG** as a solo tool to declutter the creative mind without losing a single idea.
+Built by **Justin Neal** as a solo tool to declutter the creative mind without losing a single idea.
 
 🔗 **Live App:** [jboog765.github.io/CREATD](https://jboog765.github.io/CREATD/)
 
