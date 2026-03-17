@@ -79,7 +79,7 @@ On iPhone: open in Safari → Share → Add to Home Screen. On Android: open in 
 
 | Home | Section | Note |
 |------|---------|------|
-| ![Home](screenshots/home.png) | ![Section](screenshots/section.png) | ![Note](screenshots/note.png) |
+| ![Home](screenshots/Home.jpg) | ![Section](screenshots/Section.jpg) | ![Note](screenshots/Note.jpg) |
 
 ---
 
