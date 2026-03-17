@@ -153,7 +153,47 @@
   .empty-state svg { width: 42px; height: 42px; }
   .empty-state p { font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; }
 
-  /* ── GRAIN TEXTURE ── */
+  /* ── TRASH CAN BUTTON ── */
+  .trash-btn {
+    position: absolute; bottom: 1.6rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+    cursor: pointer; z-index: 10; transition: transform 0.2s;
+  }
+  .trash-btn:hover { transform: translateX(-50%) scale(1.12); }
+  .trash-btn svg { width: 26px; height: 26px; stroke: var(--blue); opacity: 0.55; transition: opacity 0.2s; }
+  .trash-btn:hover svg { opacity: 1; }
+  .trash-count {
+    font-size: 0.55rem; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--blue); opacity: 0.5;
+    transition: opacity 0.2s; min-height: 0.8rem;
+  }
+  .trash-btn:hover .trash-count { opacity: 0.9; }
+  .trash-count.has { opacity: 0.8; }
+
+  /* ── TRASH SCREEN ── */
+  #trash-screen { flex-direction: column; }
+  .trash-item {
+    background: var(--bg-card); border: 1px solid rgba(255,85,85,0.15);
+    border-radius: 10px; padding: 0.9rem 1rem;
+    display: flex; align-items: center; gap: 0.85rem;
+    animation: itemIn 0.24s ease both;
+  }
+  .trash-item-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .trash-item-info { flex: 1; min-width: 0; }
+  .trash-item-name { font-size: 0.82rem; font-weight: 600; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .trash-item-meta { font-size: 0.62rem; color: rgba(255,255,255,0.25); margin-top: 0.15rem; letter-spacing: 0.06em; }
+  .trash-item-days { font-size: 0.6rem; color: var(--red); opacity: 0.7; margin-top: 0.1rem; }
+  .trash-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+  .trash-restore { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); cursor: pointer; padding: 0.3rem 0.6rem; border: 1px solid rgba(91,200,245,0.3); border-radius: 6px; transition: background 0.15s; white-space: nowrap; }
+  .trash-restore:hover { background: var(--blue-dim); }
+  .trash-perm-del { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,85,85,0.5); cursor: pointer; padding: 0.3rem 0.6rem; border: 1px solid rgba(255,85,85,0.2); border-radius: 6px; transition: background 0.15s; }
+  .trash-perm-del:hover { background: rgba(255,85,85,0.08); color: var(--red); }
+  .trash-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.65rem; color: rgba(255,255,255,0.1); padding-top: 5rem; }
+  .trash-empty svg { width: 42px; height: 42px; }
+  .trash-empty p { font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; }
+  .trash-clear-row { display: flex; justify-content: flex-end; padding: 0 1.5rem 0.5rem; flex-shrink: 0; }
+  .trash-clear-all { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,85,85,0.4); cursor: pointer; transition: color 0.2s; }
+  .trash-clear-all:hover { color: var(--red); }
   body::after {
     content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9999;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
@@ -305,9 +345,13 @@
     <div class="empty-state" id="empty-state" style="display:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg><p>Nothing here — hit + to add</p></div>
   </div>
   <div class="hint">Hold any item to tag, pin, or rename</div>
+  <div class="trash-btn" onclick="openTrash('section')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
+    </svg>
+    <div class="trash-count" id="section-trash-count"></div>
+  </div>
 </div>
-
-<!-- FOLDER -->
 <div id="folder-screen" class="screen hidden">
   <div class="topbar">
     <div class="back-btn" onclick="closeFolder()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>BACK</div>
@@ -325,6 +369,12 @@
     <div class="empty-state" id="folder-empty-state" style="display:none;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg><p>Folder empty — hit + to add</p></div>
   </div>
   <div class="hint">Hold any item to tag, pin, or rename</div>
+  <div class="trash-btn" onclick="openTrash('folder')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
+    </svg>
+    <div class="trash-count" id="folder-trash-count"></div>
+  </div>
 </div>
 
 <!-- NOTE -->
@@ -338,6 +388,30 @@
   <div class="note-footer">
     <div class="note-wordcount" id="note-wordcount">0 words · 0 chars</div>
     <div class="note-saved" id="note-saved">Saved ✓</div>
+  </div>
+</div>
+
+<!-- TRASH SCREEN -->
+<div id="trash-screen" class="screen hidden">
+  <div class="topbar">
+    <div class="back-btn" id="trash-back-btn" onclick="closeTrash()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      BACK
+    </div>
+    <div class="topbar-title">TRASH</div>
+    <div style="width:60px"></div>
+  </div>
+  <div class="trash-clear-row">
+    <div class="trash-clear-all" onclick="clearAllTrash()">Empty Trash</div>
+  </div>
+  <div class="content-area">
+    <div style="display:flex;flex-direction:column;gap:0.6rem;" id="trash-list"></div>
+    <div class="trash-empty" id="trash-empty" style="display:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+        <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
+      </svg>
+      <p>Trash is empty</p>
+    </div>
   </div>
 </div>
 
@@ -392,11 +466,11 @@
 <!-- CONFIRM DELETE -->
 <div class="modal-overlay" id="modal-confirm">
   <div class="modal">
-    <h3>DELETE THIS?</h3>
-    <p id="confirm-msg">This can't be undone.</p>
+    <h3>MOVE TO TRASH?</h3>
+    <p id="confirm-msg">Deleted items are kept for 7 days.</p>
     <div class="modal-btns">
       <button class="btn btn-cancel" onclick="closeModal('modal-confirm')">Cancel</button>
-      <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Move to Trash</button>
     </div>
   </div>
 </div>
@@ -444,6 +518,7 @@ let actionsKey  = null;
 let actionsCtx  = null;
 let actionsTag  = '';
 let actionsPin  = false;
+let trashCtx    = null; // 'section' | 'folder' — which screen opened trash
 
 SECTIONS.forEach(s => { vault[s] = []; });
 
@@ -574,6 +649,7 @@ window.openSection = function(name) {
   curSection=name; document.getElementById('section-title-text').textContent=name;
   document.getElementById('section-search').value='';
   show('section-screen'); hide('home'); renderItems();
+  setTimeout(()=>updateTrashCount('section'), 100);
 };
 window.goHome = function() { hide('section-screen'); show('home'); curSection=null; updateBadges(); };
 window.openFolder = function(key) {
@@ -581,6 +657,7 @@ window.openFolder = function(key) {
   curFolder=key; document.getElementById('folder-title-text').textContent=f.name;
   document.getElementById('folder-search').value='';
   hide('section-screen'); show('folder-screen'); renderFolderItems();
+  setTimeout(()=>updateTrashCount('folder'), 100);
 };
 window.closeFolder = function() { hide('folder-screen'); show('section-screen'); curFolder=null; renderItems(); };
 window.openNote = function(key,ctx) {
@@ -700,19 +777,145 @@ const EMPTY_MSGS = {
 };
 function getEmptyMsg(section) { return EMPTY_MSGS[section] || 'Nothing here — hit + to add'; }
 
-// ── CONFIRM DELETE ─────────────────────────────────────────────────────
+// ── TRASH SYSTEM ───────────────────────────────────────────────────────
+const TRASH_TTL = 7 * 24 * 60 * 60 * 1000; // 7 days in ms
+
+function getTrash() {
+  try { return JSON.parse(localStorage.getItem('creatd_trash')||'[]'); } catch(e) { return []; }
+}
+function saveTrash(arr) {
+  // purge expired items first
+  const now = Date.now();
+  const fresh = arr.filter(i => (now - i.deletedAt) < TRASH_TTL);
+  localStorage.setItem('creatd_trash', JSON.stringify(fresh));
+  return fresh;
+}
+function addToTrash(item, section, folderKey) {
+  const arr = getTrash();
+  arr.push({ ...item, deletedAt: Date.now(), fromSection: section, fromFolder: folderKey||null });
+  saveTrash(arr);
+}
+function daysLeft(deletedAt) {
+  const remaining = TRASH_TTL - (Date.now() - deletedAt);
+  return Math.max(1, Math.ceil(remaining / (24*60*60*1000)));
+}
+
+function updateTrashCount(ctx) {
+  const trash = saveTrash(getTrash()); // also purges expired
+  const section = ctx==='folder' ? curSection : curSection;
+  const folder  = ctx==='folder' ? curFolder  : null;
+  const count = trash.filter(i => folder ? i.fromFolder===folder : i.fromSection===section && !i.fromFolder).length;
+  const idSection = 'section-trash-count';
+  const idFolder  = 'folder-trash-count';
+  const el = document.getElementById(ctx==='folder' ? idFolder : idSection);
+  if (!el) return;
+  el.textContent = count ? `${count} item${count!==1?'s':''}` : '';
+  el.classList.toggle('has', count > 0);
+}
+
+window.openTrash = function(ctx) {
+  trashCtx = ctx;
+  hide(ctx==='folder' ? 'folder-screen' : 'section-screen');
+  show('trash-screen');
+  renderTrash(ctx);
+};
+window.closeTrash = function() {
+  hide('trash-screen');
+  show(trashCtx==='folder' ? 'folder-screen' : 'section-screen');
+  if (trashCtx==='folder') renderFolderItems(); else renderItems();
+};
+
+function renderTrash(ctx) {
+  const trash = saveTrash(getTrash());
+  const folder = ctx==='folder' ? curFolder : null;
+  const items = folder
+    ? trash.filter(i => i.fromFolder===folder)
+    : trash.filter(i => i.fromSection===curSection && !i.fromFolder);
+
+  const list  = document.getElementById('trash-list');
+  const empty = document.getElementById('trash-empty');
+  list.innerHTML = '';
+  empty.style.display = items.length ? 'none' : 'flex';
+
+  const icons = { folder:'📁', note:'📝', image:'🖼️', audio:'🎵', video:'🎬', link:'🔗' };
+
+  items.forEach((item, idx) => {
+    const el = document.createElement('div');
+    el.className = 'trash-item';
+    el.style.animationDelay = (idx*30)+'ms';
+    el.innerHTML = `
+      <div class="trash-item-icon">${icons[item.type]||'📄'}</div>
+      <div class="trash-item-info">
+        <div class="trash-item-name">${esc(item.name)}</div>
+        <div class="trash-item-meta">${item.type.toUpperCase()} · ${item.fromSection}</div>
+        <div class="trash-item-days">Deleted ${timeAgo(item.deletedAt)} · ${daysLeft(item.deletedAt)}d left</div>
+      </div>
+      <div class="trash-actions">
+        <div class="trash-restore" onclick="restoreItem('${item.key}')">Restore</div>
+        <div class="trash-perm-del" onclick="permDelete('${item.key}')">✕</div>
+      </div>`;
+    list.appendChild(el);
+  });
+}
+
+window.restoreItem = async function(key) {
+  const trash = getTrash();
+  const idx = trash.findIndex(i=>i.key===key);
+  if (idx===-1) return;
+  const item = {...trash[idx]};
+  const section = item.fromSection;
+  const folderKey = item.fromFolder;
+  delete item.deletedAt; delete item.fromSection; delete item.fromFolder;
+  trash.splice(idx,1);
+  saveTrash(trash);
+
+  if (!vault[section]) vault[section]=[];
+  if (folderKey) {
+    const f = (vault[section]||[]).find(i=>i.key===folderKey);
+    if (f) { if(!f.children) f.children=[]; f.children.push(item); }
+    else vault[section].push(item);
+  } else {
+    vault[section].push(item);
+  }
+  await saveVault();
+  showToast(`"${item.name}" restored ✓`);
+  renderTrash(trashCtx);
+  updateTrashCount(trashCtx);
+};
+
+window.permDelete = function(key) {
+  const trash = getTrash().filter(i=>i.key!==key);
+  saveTrash(trash);
+  renderTrash(trashCtx);
+  updateTrashCount(trashCtx);
+};
+
+window.clearAllTrash = function() {
+  const trash = getTrash();
+  const folder = trashCtx==='folder' ? curFolder : null;
+  const remaining = folder
+    ? trash.filter(i => i.fromFolder!==folder)
+    : trash.filter(i => !(i.fromSection===curSection && !i.fromFolder));
+  saveTrash(remaining);
+  renderTrash(trashCtx);
+  updateTrashCount(trashCtx);
+  showToast('Trash emptied');
+};
+
+// ── CONFIRM DELETE → MOVE TO TRASH ─────────────────────────────────────
 let pendingDeleteKey = null, pendingDeleteCtx = null, pendingDeleteItem = null;
 function requestDelete(item, ctx) {
   pendingDeleteKey=item.key; pendingDeleteCtx=ctx; pendingDeleteItem=item;
-  document.getElementById('confirm-msg').textContent=`Delete "${item.name}"? This can't be undone.`;
+  document.getElementById('confirm-msg').textContent=`"${item.name}" will be kept in trash for 7 days.`;
   openModal('modal-confirm');
 }
 window.confirmDelete = async function() {
   closeModal('modal-confirm');
   if (!pendingDeleteKey) return;
   const item=pendingDeleteItem, ctx=pendingDeleteCtx;
-  if(item?.storagePath){try{await deleteObject(ref(storage,item.storagePath));}catch(e){}}
-  if(ctx==='folder'){
+  // Move to trash instead of permanent delete
+  addToTrash(item, curSection, ctx==='folder'?curFolder:null);
+  if (ctx==='folder') {
     const f=(vault[curSection]||[]).find(i=>i.key===curFolder);
     if(f) f.children=(f.children||[]).filter(i=>i.key!==pendingDeleteKey);
     await saveVault(); renderFolderItems();
@@ -720,6 +923,8 @@ window.confirmDelete = async function() {
     vault[curSection]=(vault[curSection]||[]).filter(i=>i.key!==pendingDeleteKey);
     await saveVault(); renderItems();
   }
+  updateTrashCount(ctx);
+  showToast('Moved to trash');
   pendingDeleteKey=null; pendingDeleteCtx=null; pendingDeleteItem=null;
 };
 
